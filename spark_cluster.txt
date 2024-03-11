@@ -1,0 +1,37 @@
+
+C:\spark\bin\spark-submit --class com.sundogsoftware.spark.HelloWorld C:\SparkScalaCourse\out\artifacts\SparkCourse\SparkCourse.jar
+
+media.sundog-soft.com/SparkScala/sbt.zip
+
+---- thong tin ve scala verison and spark version tren may tinh
+scala version: 2.12.8
+spark version: 3.5.0
+----
+
+c:\spark\bin\spark-submit HelloWorld-assembly-1.0.jar
+
+c:\spark\bin\spark-submit MinTemperatureDataset-assembly-1.0.jar
+
+--build.sbt old--
+
+name := "HelloWorld"
+
+version := "1.0"
+
+organization := "com.sundogsoftware"
+
+scalaVersion := "2.12.12"
+
+libraryDependencies ++= Seq(
+"org.apache.spark" %% "spark-core" % "3.5.0" % "provided",
+"org.apache.spark" %% "spark-sql" % "3.5.0" % "provided"
+)
+
+c:\sbt 
+sbt assembly
+
+c:\spark\bin\spark-submit --class com.sundogsoftware.spark HelloWorld-assembly-1.0.jar
+
+Bearer Token
+
+AAAAAAAAAAAAAAAAAAAAAGxTsgEAAAAATYWELZJoPDhNyE%2FzC7HwNbRDs00%3DT3PiGoNmeUGemlQxZUbPsGx9DUY1uMNmX4rvAUm5Gb2zlFpgp0

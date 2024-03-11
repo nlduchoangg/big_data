@@ -1,0 +1,57 @@
+///////////////////////////////// MINTEMPERATURES //////////////////////////////////////
+package com.sundogsoftware.spark
+
+import org.apache.spark._
+import org.apache.log4j._
+import scala.math.min
+
+/** Find the minimum temperature by weather station */
+object MinTemperatures1 {
+
+  def parseLine(line:String): (String, String, Float) = {
+    val fields = line.split(',')
+    val stationID = fields(0)
+    val entryType = fields(2)
+    val temperature = fields(3).toFloat * 0.1f * (9.0f / 5.0f) + 32.0f
+    (stationID, entryType, temperature)
+  }
+
+  /** Our main function where the action happens */
+  def main(args: Array[String]) {
+
+    // Set the log level to only print errors
+    Logger.getLogger("org").setLevel(Level.ERROR)
+
+    // Create a SparkContext using every core of the local machine
+    val sc = new SparkContext("local[*]", "MinTemperatures")
+
+    // Read each line of input data
+    val lines = sc.textFile("data/1800.csv")
+
+    // Convert to (stationID, entryType, temperature) tuples
+    val parsedLines = lines.map(parseLine)
+
+    // ko thể dùng mapvalues vì rdd có 3 trường dữ liệu lận
+    // nên phải dùng filter để lọc ra những entryType có TMIN
+
+    //val arr = parsedLines.map(x => x._2 == "TMIN")
+    val arr = parsedLines.filter(x => x._2 == "TMIN") // arr có data dạng (stationID, entryType, temp)
+    // sử dụng hàm map convert sang dạng (stationID, temp)
+    val arr1 = arr.map(x =>(x._1, x._3))
+
+    // so sánh từng phần tử có cùng key để chọn ra phần tử  có temp thấp nhất
+    val arr2 = arr1.reduceByKey((x,y) => min(x,y))
+
+    arr2.foreach(println)
+
+    val arr3 = arr2.collect() // type arr3: tuple.
+
+    // duyệt từng phần tử trong tuple.
+    for((key, value) <- arr3){
+        println(s"$key minimum temperature: $value")
+    }
+    print("-----------------------------------")
+
+
+  }
+}

@@ -1,0 +1,49 @@
+--------------------------------------START ZOOKEEPER VÀ KAFKA SERVER----------------------------------------------
+.\bin\windows\zookeeper-server-start.bat .\config\zookeeper.properties
+
+.\bin\windows\kafka-server-start.bat .\config\server.properties
+
+.\bin\windows\kafka-server-start.bat config\server2.properties
+
+----------------------------------------CREATE VÀ XEM THÔNG TIN VỀ 1 TOPIC --------------------------------------
+kafka-topics.bat --create --topic test --bootstrap-server localhost:9092 --partitions 2 --replication-factor 1
+.\bin\windows\kafka-topics.bat --describe --topic test --bootstrap-server localhost:9092
+
+----------------------------------------DELETE 1 TOPIC DỰA VÀO TÊN--------------------------------------
+.\bin\windows\kafka-topics.bat --bootstrap-server localhost:9092 --delete --topic test
+
+----------------------------------------DELETE 1 PARTITION TRONG 1 TOPIC CỤ THỂ-------------------------------------- 
+kafka-topics.bat --bootstrap-server localhost:9092 --delete --topic test --partitions 1
+
+----------------------------------------PUBLISH EVENT VÀO 1 TOPIC--------------------------------------
+.\bin\windows\kafka-console-producer.bat --topic test --bootstrap-server localhost:9092
+
+----------------------------------------START CONSUMER ĐỂ NHẬN EVENT TỪ 1 TOPIC CỤ THỂ--------------------------------------
+.\bin\windows\kafka-console-consumer.bat --topic test --from-beginning --bootstrap-server localhost:9092
+
+.\bin\windows\kafka-topics.bat --zookeeper=localhost:2181 --alter --topic test --config retention.ms=30000*
+
+----------------------------------------XEM THÔNG TIN TẤT CẢ CÁC TOPIC.--------------------------------------
+kafka-topics.bat --bootstrap-server localhost:9092 --describe
+
+----------------------------------------XEM THÔNG TIN CÁC BROKER CÓ TRÊN KAFKA CLUSTER.--------------------------------------
+kafka-log-dirs.bat --bootstrap-server localhost:9092 --describe
+
+----------------------------------------TẠO 1 TOPIC CÓ 3 PARTITION VÀ 2 ISR TRÊN BROKER--------------------------------------
+kafka-topics.bat --create --topic book --bootstrap-server localhost:9092 --partitions 3 --replication-factor 2
+
+----------------------------------------TẠO 1 CONSUMER GROUP--------------------------------------
+kafka-consumer-groups.bat --bootstrap-server localhost:9092 --group group-101 --topic test
+
+----------------------------------------XEM CÁC THÔNG TIN VỀ 1 CONSUMER GROUP--------------------------------------
+kafka-consumer-groups.bat --bootstrap-server localhost:9092 --group group-101 --describe
+
+----------------------------------------XEM CÁC GROUP_ID_CONFIG TRÊN 1 BROKER--------------------------------------
+kafka-consumer-groups.bat --list --bootstrap-server localhost:9092
+
+kafka-consumer-groups.bat --bootstrap-server localhost:9092 --describe --console-consumer-59861
+
+----------------------------------------KIỂM TRA CONSUMER GROUP VÀ OFFSET CỦA TỪNG PARTITION THEO GROUPID--------------------------------------
+kafka-consumer-groups.bat --bootstrap-server localhost:9092 --describe --group console-consumer-100
+
+
